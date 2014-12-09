@@ -27,6 +27,7 @@ import com.datastax.driver.core.SocketOptions;
 import com.datastax.driver.core.policies.ConstantReconnectionPolicy;
 import com.datastax.driver.core.policies.DowngradingConsistencyRetryPolicy;
 
+import com.datastax.driver.core.policies.LoadBalancingPolicy;
 import groovy.util.ConfigObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -78,6 +79,12 @@ public class CassandraDatastore extends AbstractDatastore implements DisposableB
 		builder.withRetryPolicy(DowngradingConsistencyRetryPolicy.INSTANCE)
 			.withReconnectionPolicy(new ConstantReconnectionPolicy(100L))
 			.withSocketOptions(new SocketOptions().setKeepAlive(true));
+
+        Object lbPolicy = config.get("loadBalancingPolicy");
+        if( lbPolicy != null && lbPolicy instanceof LoadBalancingPolicy ){
+            builder.withLoadBalancingPolicy((LoadBalancingPolicy)lbPolicy);
+        }
+
 
 		this.cluster = builder.build();
 		this.session = cluster.connect();
