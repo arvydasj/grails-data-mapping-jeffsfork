@@ -1,4 +1,4 @@
-version = "0.3.BUILD-SNAPSHOT"
+version = "0.3.2.BUILD-SNAPSHOT"
 
 configurations {
 	grails
@@ -49,12 +49,11 @@ dependencies {
     }
 
 
-	compile project(':grails-datastore-gorm'),
-		project(':grails-datastore-core'),
-		project(':grails-datastore-gorm-plugin-support')
+	compile 'org.grails:grails-datastore-gorm:3.1.0.RELEASE',
+            'org.grails:grails-datastore-core:3.1.0.RELEASE',
+            'org.grails:grails-datastore-gorm-plugin-support:3.1.0.RELEASE'
 
-	testCompile project(':grails-datastore-gorm-test'),
-		project(':grails-datastore-gorm-tck')
+	testCompile 'org.grails:grails-datastore-gorm-test:3.1.0.RELEASE','org.grails:grails-datastore-gorm-tck:3.1.0.RELEASE'
 
 
 	compile "com.datastax.cassandra:cassandra-driver-core:2.1.3"

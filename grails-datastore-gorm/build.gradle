@@ -80,9 +80,9 @@ sourceSets {
     main {
         compileClasspath += configurations.optional
     }
-    javadoc {
-        classpath += configurations.optional
-    }
+//    javadoc {
+//        classpath += configurations.optional
+//    }
 }
 
 idea {

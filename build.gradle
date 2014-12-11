@@ -54,14 +54,16 @@ task wrapper(type: Wrapper) {
 subprojects {
     if(project.name.endsWith("spring-boot")) return
     ext {
-        releaseType = "RELEASE"
-//        releaseType = "BUILD-SNAPSHOT"
+        projectVersion = "3.1.0.1"
+//        releaseType = "RELEASE"
+        releaseType = "BUILD-SNAPSHOT"
         isCiBuild = project.hasProperty("isCiBuild")
         isBuildSnapshot = releaseType == "BUILD-SNAPSHOT"
     }
 
     version = "3.1.1.${releaseType}"
     group = "org.grails"
+//    group = "com.reachlocal"
 
 
     def isStandardGroovyMavenProject = isGroovyProject(project)
@@ -101,7 +103,7 @@ subprojects {
 
     dependencies {
         if (isStandardGroovyMavenProject) {
-            groovy group: 'org.codehaus.groovy', name: 'groovy-all', version: groovyVersion
+            compile group: 'org.codehaus.groovy', name: 'groovy-all', version: groovyVersion
 
             testCompile 'junit:junit:4.8.2'
             testCompile (spockDependency) {
@@ -146,7 +148,7 @@ subprojects {
 
     if (isGormDatasource) {
         dependencies {
-            testCompile project(":grails-datastore-gorm-tck")
+            testCompile 'org.grails:grails-datastore-gorm-tck:3.1.0.RELEASE'
         }
 
         // We need to test against the TCK. Gradle cannot find/run tests from jars
@@ -253,13 +255,19 @@ subprojects {
                     signing.signPom(deployment)
                 }
 
-                repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
-                    authentication(userName: project.hasProperty("sonatypeUsername") ? project.sonatypeUsername : null,
-                            password: project.hasProperty("sonatypePassword") ?  project.sonatypePassword : null)
+//                repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+//                    authentication(userName: project.hasProperty("sonatypeUsername") ? project.sonatypeUsername : null,
+//                            password: project.hasProperty("sonatypePassword") ?  project.sonatypePassword : null)
+//                }
+
+                repository(url: "http://artifacts.reachlocal.com/nexus/content/repositories/rl-releases/") {
+                    authentication(userName: 'deploy-test',
+                            password: 'deploy123')
                 }
-                snapshotRepository(url: "http://repo.grails.org/grails/libs-snapshots-local") {
-                    authentication(userName: project.hasProperty("artifactoryPublishUsername") ? project.artifactoryPublishUsername : null,
-                            password: project.hasProperty("artifactoryPublishPassword") ?  project.artifactoryPublishPassword : null)
+
+                snapshotRepository(url: "http://artifacts.reachlocal.com/nexus/content/repositories/rl-snapshots") {
+                    authentication(userName: 'deploy-test',
+                                                password: 'deploy123')
                 }
 
                 pom.project {
